@@ -1,14 +1,10 @@
-// Modern JavaScript for Portfolio
-
+// Modern Portfolio JavaScript
 class PortfolioApp {
     constructor() {
         this.navbar = document.getElementById('navbar');
         this.mobileToggle = document.getElementById('mobile-toggle');
         this.navMenu = document.querySelector('.nav-menu');
         this.contactForm = document.getElementById('contact-form');
-        this.filterButtons = document.querySelectorAll('.filter-btn');
-        this.projectCards = document.querySelectorAll('.project-card');
-        this.skillProgress = document.querySelectorAll('.skill-progress');
         
         this.init();
     }
@@ -17,9 +13,7 @@ class PortfolioApp {
         this.setupEventListeners();
         this.setupIntersectionObserver();
         this.setupScrollEffects();
-        this.setupProjectFilter();
         this.setupContactForm();
-        this.animateSkillBars();
         this.setupFloatingCards();
     }
 
@@ -54,11 +48,6 @@ class PortfolioApp {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    
-                    // Trigger skill bar animations when skills section is visible
-                    if (entry.target.id === 'skills') {
-                        this.animateSkillBars();
-                    }
                 }
             });
         }, observerOptions);
@@ -143,69 +132,23 @@ class PortfolioApp {
     }
 
     toggleMobileMenu() {
-        this.navMenu.classList.toggle('active');
-        this.mobileToggle.classList.toggle('active');
+        if (this.navMenu) {
+            this.navMenu.classList.toggle('active');
+        }
+        if (this.mobileToggle) {
+            this.mobileToggle.classList.toggle('active');
+        }
         document.body.classList.toggle('menu-open');
     }
 
     closeMobileMenu() {
-        this.navMenu.classList.remove('active');
-        this.mobileToggle.classList.remove('active');
+        if (this.navMenu) {
+            this.navMenu.classList.remove('active');
+        }
+        if (this.mobileToggle) {
+            this.mobileToggle.classList.remove('active');
+        }
         document.body.classList.remove('menu-open');
-    }
-
-    setupProjectFilter() {
-        this.filterButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Update active filter button
-                this.filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                // Filter projects
-                const filter = button.getAttribute('data-filter');
-                this.filterProjects(filter);
-            });
-        });
-    }
-
-    filterProjects(filter) {
-        this.projectCards.forEach((card, index) => {
-            const categories = card.getAttribute('data-category') || '';
-            const shouldShow = filter === 'all' || categories.includes(filter);
-            
-            setTimeout(() => {
-                if (shouldShow) {
-                    card.style.display = 'block';
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 50);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(-20px)';
-                    
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 300);
-                }
-            }, index * 100);
-        });
-    }
-
-    animateSkillBars() {
-        this.skillProgress.forEach((bar, index) => {
-            const progress = bar.getAttribute('data-progress');
-            
-            setTimeout(() => {
-                bar.style.width = progress + '%';
-                bar.classList.add('animate');
-            }, index * 200);
-        });
     }
 
     setupContactForm() {
@@ -217,7 +160,7 @@ class PortfolioApp {
     async handleContactSubmit(e) {
         e.preventDefault();
         
-        const submitBtn = this.contactForm.querySelector('.submit-btn');
+        const submitBtn = this.contactForm.querySelector('button[type="submit"]');
         const originalContent = submitBtn.innerHTML;
         
         // Show loading state
@@ -230,7 +173,7 @@ class PortfolioApp {
             
             // Show success state
             submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span>Message Sent!</span>';
-            submitBtn.style.background = 'var(--gradient-accent)';
+            submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)';
             
             // Show success message
             this.showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
@@ -275,11 +218,11 @@ class PortfolioApp {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.innerHTML = `
-            <div class="notification-content">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
                 <span>${message}</span>
             </div>
-            <button class="notification-close">&times;</button>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;">&times;</button>
         `;
         
         // Add styles
@@ -289,13 +232,14 @@ class PortfolioApp {
             right: '20px',
             background: type === 'success' ? 'var(--success)' : 'var(--error)',
             color: 'white',
-            padding: 'var(--space-lg)',
-            borderRadius: 'var(--radius-lg)',
+            padding: '1rem 1.5rem',
+            borderRadius: '0.75rem',
             boxShadow: 'var(--shadow-xl)',
             zIndex: '9999',
             display: 'flex',
             alignItems: 'center',
-            gap: 'var(--space-md)',
+            justifyContent: 'space-between',
+            gap: '1rem',
             minWidth: '300px',
             transform: 'translateX(100%)',
             transition: 'transform 0.3s ease'
@@ -310,15 +254,11 @@ class PortfolioApp {
         
         // Auto remove after 5 seconds
         setTimeout(() => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
+            if (notification.parentElement) {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }
         }, 5000);
-        
-        // Manual close
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        });
     }
 
     setupFloatingCards() {
@@ -387,71 +327,6 @@ const utils = {
     }
 };
 
-// Enhanced animations
-const animations = {
-    fadeInUp: (element, delay = 0) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'all 0.6s ease';
-        
-        setTimeout(() => {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        }, delay);
-    },
-
-    staggeredAnimation: (elements, animation, staggerDelay = 100) => {
-        elements.forEach((element, index) => {
-            animation(element, index * staggerDelay);
-        });
-    },
-
-    countUp: (element, target, duration = 2000) => {
-        const start = 0;
-        const increment = target / (duration / 16);
-        let current = start;
-        
-        const timer = setInterval(() => {
-            current += increment;
-            element.textContent = Math.floor(current);
-            
-            if (current >= target) {
-                element.textContent = target;
-                clearInterval(timer);
-            }
-        }, 16);
-    }
-};
-
-// Performance monitoring
-const performance = {
-    measureFPS: () => {
-        let fps = 0;
-        let lastTime = Date.now();
-        
-        function tick() {
-            const currentTime = Date.now();
-            fps = 1000 / (currentTime - lastTime);
-            lastTime = currentTime;
-            
-            if (fps < 30) {
-                console.warn('Low FPS detected:', fps);
-            }
-            
-            requestAnimationFrame(tick);
-        }
-        
-        tick();
-    },
-
-    measureLoadTime: () => {
-        window.addEventListener('load', () => {
-            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-            console.log('Page load time:', loadTime + 'ms');
-        });
-    }
-};
-
 // Dark mode support
 const darkMode = {
     init: () => {
@@ -465,50 +340,6 @@ const darkMode = {
     }
 };
 
-// Accessibility enhancements
-const accessibility = {
-    init: () => {
-        accessibility.setupKeyboardNavigation();
-        accessibility.setupScreenReaderSupport();
-        accessibility.setupFocusManagement();
-    },
-
-    setupKeyboardNavigation: () => {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                // Close any open modals or menus
-                document.querySelector('.mobile-menu-toggle')?.click();
-            }
-        });
-    },
-
-    setupScreenReaderSupport: () => {
-        // Add ARIA labels and descriptions
-        document.querySelectorAll('button, a').forEach(element => {
-            if (!element.getAttribute('aria-label') && !element.textContent.trim()) {
-                const icon = element.querySelector('i[class*="fa-"]');
-                if (icon) {
-                    const iconClass = icon.className.match(/fa-([^\s]+)/)?.[1];
-                    element.setAttribute('aria-label', iconClass?.replace(/-/g, ' ') || 'Button');
-                }
-            }
-        });
-    },
-
-    setupFocusManagement: () => {
-        // Enhance focus visibility
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                document.body.classList.add('keyboard-navigation');
-            }
-        });
-
-        document.addEventListener('mousedown', () => {
-            document.body.classList.remove('keyboard-navigation');
-        });
-    }
-};
-
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize main app
@@ -516,31 +347,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize additional features
     darkMode.init();
-    accessibility.init();
-    performance.measureLoadTime();
-    
-    // Initialize performance monitoring in development
-    if (window.location.hostname === 'localhost') {
-        performance.measureFPS();
-    }
     
     console.log('🚀 Portfolio loaded successfully!');
 });
 
-// Service Worker registration for PWA support
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
-
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { PortfolioApp, utils, animations, darkMode, accessibility };
+    module.exports = { PortfolioApp, utils, darkMode };
 }
