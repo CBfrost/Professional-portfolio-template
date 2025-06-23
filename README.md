@@ -1,4 +1,4 @@
-# Panashe Matengambiri - Portfolio
+# Professional - Portfolio
 
 > Modern, responsive portfolio showcasing frontend development and UX design expertise
 
@@ -132,13 +132,6 @@ Optimization Techniques
     Safari: 14+
     Edge: 88+
 
-📧 Contact
-
-    Email: panashefrost@icloud.com
-    Phone: +263 771 445 590
-    LinkedIn: linkedin.com/in/panashematengambiri
-    Location: Harare, Zimbabwe
-
 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -150,20 +143,6 @@ While this is a personal portfolio, I welcome feedback and suggestions:
     Create a feature branch
     Make your changes
     Submit a pull request
-
-🔗 Links
-
-    Live Demo: cbfrost.github.io/panashe-portfolio
-    GitHub Repository: github.com/CBfrost/panashe-portfolio
-    LinkedIn: linkedin.com/in/panashematengambiri
-    Behance: behance.net/panashematenga
-
-🏆 Achievements
-
-    Google UX Design Certified
-    3 Successful Internships Completed
-    60,000+ Users Impacted
-    Multiple Enterprise Systems Implemented
 
 Built with ❤️ by Panashe Matengambiri
 Available for full-time opportunities • Remote & On-site
